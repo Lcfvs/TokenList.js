@@ -44,7 +44,7 @@
         'static': true,
         'super': true
     };
-    TokenList = function TokenList(source) {
+    TokenList = function TokenList(fileName, source) {
         var tokens, line, chrKey, chr, chrCode, nextChr, Tokenizer, lastToken, lastBlackValue, value;
         tokens = [];
         line = 1;
@@ -76,7 +76,7 @@
             }
             value = lastToken.value;
             if (value === undefined) {
-                throw new ReferenceError('Invalid ' + lastToken.type + ' token');
+                throw new ReferenceError('Invalid ' + lastToken.type + ' token', fileName, line);
             } else {
                 if (Tokenizer === Space || Tokenizer === Comment) {
                     line += value.split('\n').length - 1;
