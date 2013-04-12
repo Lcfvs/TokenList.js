@@ -1,6 +1,6 @@
 (function () {
     'use strict';
-    var keywords, TokenList, parseToken, Space, Comment, Namespace, Label, Keyword, Number, String, RegExp, Symbol;
+    var keywords, TokenList, parseToken, Space, Comment, Spread, Namespace, Label, Keyword, Number, String, RegExp, Quasis, Symbol;
     keywords = {};
     TokenList = function TokenList(fileName, source) {
         var tokens, line, chrKey, chr, chrCode, nextChr, Tokenizer, lastToken, lastBlackValue, value;
@@ -22,7 +22,7 @@
             } else if (chrCode === 36 || (chrCode > 64 && chrCode < 91) || chrCode === 95 || (chrCode > 96 && chrCode < 123)) {
                 Tokenizer = Label;
             } else if ((chr === '\\' && nextChr === '\\') || (chr === ':' && nextChr === ':') || (chr === '.' && nextChr === '.')) {
-                Tokenizer = Namespace;
+                Tokenizer = chr === '.' && source[chrKey + 2] === '.' ? Spread : Namespace;
             } else if ((chrCode > 47 && chrCode < 58) || (chr === '-' && (nextChr === '0' || nextChr === '1' || nextChr === '2' || nextChr === '3' || nextChr === '4' || nextChr === '5' || nextChr === '6' || nextChr === '7' || nextChr === '8' || nextChr === '9'))) {
                 Tokenizer = Number;
             } else {
@@ -53,44 +53,55 @@
     parseToken = function parseToken(source, line, pos, Tokenizer) {
         var args, token;
         args = source.match(Tokenizer.pattern) || [];
-        token = new Tokenizer(args[1], args[2]);
-        token.type = token.constructor.name;
-        token.line = line;
-        token.pos = pos;
+        token = new Tokenizer(source, line, pos, args[1], args[2]);
+        if (token.type === undefined) {
+            token.type = token.constructor.name;
+            token.line = line;
+            token.pos = pos;
+        }
         return token;
     };
-    Space = function Space(comment) {
+    Space = function Space(source, line, pos, comment) {
         this.value = comment;
     };
-    Comment = function Comment(comment) {
+    Comment = function Comment(source, line, pos, comment) {
         this.value = comment;
     };
-    Namespace = function Namespace(ns) {
+    Spread = function Spread(source, line, pos, spread) {
+        this.value = spread;
+    };
+    Namespace = function Namespace(source, line, pos, ns) {
         this.value = ns;
     };
-    Label = function Label(word) {
-        var returnValue;
-        if (!keywords.hasOwnProperty(word)) {
+    Label = function Label(source, line, pos, word) {
+        var backQuote, returnValue;
+        backQuote = source[word.length];
+        if (keywords.hasOwnProperty(word)) {
+            returnValue = new Keyword(source, line, pos, word);
+        } else if (backQuote === '`') {
+            returnValue = parseToken(source, line, pos, Quasis);
+        } else {
             returnValue = this;
             this.value = word;
-        } else {
-            returnValue = new Keyword(word);
         }
         return returnValue;
     };
-    Keyword = function Keyword(keyword) {
+    Keyword = function Keyword(source, line, pos, keyword) {
         this.value = keyword;
     };
-    Number = function Number(number) {
+    Number = function Number(source, line, pos, number) {
         this.value = number;
     };
-    String = function String(str) {
+    String = function String(source, line, pos, str) {
         this.value = str;
     };
-    RegExp = function RegExp(regExp, flags) {
+    RegExp = function RegExp(source, line, pos, regExp, flags) {
         this.value = regExp !== undefined && (flags === undefined || (flags.indexOf('g') === flags.lastIndexOf('g') && flags.indexOf('m') === flags.lastIndexOf('m') && flags.indexOf('i') === flags.lastIndexOf('i') && flags.indexOf('y') === flags.lastIndexOf('y'))) ? regExp : undefined;
     };
-    Symbol = function Symbol(symbol) {
+    Quasis = function Quasis(source, line, pos, quasi) {
+        this.value = quasi;
+    };
+    Symbol = function Symbol(source, line, pos, symbol) {
         this.value = symbol;
     };
     TokenList.addKeywords = function () {
@@ -107,10 +118,12 @@
     Space.pattern = /^(\s+)/;
     Comment.pattern = /^((?:\/\/[^\n]*\n)|(?:\/\*.+\*\/))/;
     Namespace.pattern = /^((?:(?:(?:(?:::)|(?:\.\.\\)|(?:\\))\w[\w\d]*)(?:\\(?:(?:\.\.)|(?:\w[\w\d]*)))*)|(?:::)|(?:\\)|(?:\.\.\\))/;
+    Spread.pattern = /^(\.{3})/;
     Label.pattern = /^([\w_$][\w\d_$]*)/;
     Number.pattern = /^(-?(?:(?:0x[\da-f]+)|(?:(?:(?:0|(?:[1-9]\d*))|(?:(?:0|(?:[1-9]\d*))?\.\d+))(?:e-?\d+)?)))/i;
     String.pattern = /^((?:'[^\n]*?[^\\](?:\\\\)*')|(?:"[^\n]*?[^\\](?:\\\\)*"))/;
     RegExp.pattern = /^(\/[^\n\r]*?[^\\](?:\\\\)*\/([gmiy]{0,4})?)/;
+    Quasis.pattern = /([\w_$][\w\d_$]*`[^\n]*?[^\\](?:\\\\)*`)/;
     Symbol.pattern = /^([!=]==?|\|{1,2}|&{1,2}|<{2}|>{2,3}|\+{2}|\-{2}|[+\-%^*\/<>]=?|!+|[~\.{}\[\]:?,=;])/;
     self.TokenList = TokenList;
 }());
