@@ -1,49 +1,7 @@
 (function () {
     'use strict';
     var keywords, TokenList, parseToken, Space, Comment, Namespace, Label, Keyword, Number, String, RegExp, Symbol;
-    keywords = {
-        'if': true,
-        'else': true,
-        'while': true,
-        'for': true,
-        'switch': true,
-        'do': true,
-        'break': true,
-        'continue': true,
-        'try': true,
-        'catch': true,
-        'finally': true,
-        'throw': true,
-        'new': true,
-        'delete': true,
-        'var': true,
-        'const': true,
-        'let': true,
-        'case': true,
-        'default': true,
-        'in': true,
-        'typeof': true,
-        'instanceof': true,
-        'true': true,
-        'false': true,
-        'void': true,
-        'null': true,
-        'undefined': true,
-        'NaN': true,
-        'Infinity': true,
-        'class': true,
-        'interface': true,
-        'namespace': true,
-        'extends': true,
-        'implements': true,
-        'public': true,
-        'protected': true,
-        'private': true,
-        'final': true,
-        'abstract': true,
-        'static': true,
-        'super': true
-    };
+    keywords = {};
     TokenList = function TokenList(fileName, source) {
         var tokens, line, chrKey, chr, chrCode, nextChr, Tokenizer, lastToken, lastBlackValue, value;
         tokens = [];
