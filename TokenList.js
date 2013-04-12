@@ -70,7 +70,6 @@
             } else {
                 Tokenizer = Symbol;
             }
-
             lastToken = parseToken(source.substring(chrKey), line, chrKey, Tokenizer);
             if (!(lastToken instanceof Space) && !(lastToken instanceof Comment)) {
                 lastBlackValue = lastToken.value;
@@ -86,7 +85,6 @@
                 chrKey += value.length;
             }
             tokens.push(lastToken);
-
             chr = source[chrKey];
         }
         this.getItem = function (tokenKey) {
@@ -136,6 +134,17 @@
     };
     Symbol = function Symbol(symbol) {
         this.value = symbol;
+    };
+    TokenList.addKeywords = function () {
+        var key, length, keyword;
+        key = 0;
+        length = arguments.length;
+        while (key < length) {
+            keyword = arguments[key];
+            if (!keywords.hasOwnProperty(keyword)) {
+                keywords[keyword] = true;
+            }
+        }
     };
     Space.pattern = /^(\s+)/;
     Comment.pattern = /^((?:\/\/[^\n]*\n)|(?:\/\*.+\*\/))/;
