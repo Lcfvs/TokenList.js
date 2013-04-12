@@ -29,9 +29,15 @@ Arguments :
 
 
 The TokenList properties :
-------------------------
+--------------------------
 
-Function <strong>addKeywords</strong> : the function to add a list of keywords<br />
+Function <strong>addKeywords()</strong> : the function to add a list of keywords<br />
+
+
+The TokenList instance properties :
+-----------------------------------
+
+Function <strong>item( key )</strong> : the function to retrieve a token<br />
 
 
 Compatibility :
