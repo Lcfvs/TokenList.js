@@ -11,7 +11,7 @@
         while (chr !== undefined) {
             nextChr = source[chrKey + 1];
             chrCode = chr.charCodeAt(0);
-            if (chr === '\n' || chr === ' ' || chr === '\r' || chr === '\t') {
+            if (chr === ' ' || chr === '\t' || chr === '\n' || chr === '\r') {
                 Tokenizer = Space;
             } else if (chr === '/' && (nextChr === '/' || nextChr === '*')) {
                 Tokenizer = Comment;
