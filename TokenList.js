@@ -63,7 +63,7 @@
                 Tokenizer = String;
             } else if (chrCode === 36 || (chrCode > 64 && chrCode < 91) || chrCode === 95 || (chrCode > 96 && chrCode < 123)) {
                 Tokenizer = Label;
-            } else if ((chr === '\\' && nextChr === '\\') || (chr === ':' && nextChr === ':')) {
+            } else if ((chr === '\\' && nextChr === '\\') || (chr === ':' && nextChr === ':') || (chr === '.' && nextChr === '.')) {
                 Tokenizer = Namespace;
             } else if ((chrCode > 47 && chrCode < 58) || (chr === '-' && (nextChr === '0' || nextChr === '1' || nextChr === '2' || nextChr === '3' || nextChr === '4' || nextChr === '5' || nextChr === '6' || nextChr === '7' || nextChr === '8' || nextChr === '9'))) {
                 Tokenizer = Number;
