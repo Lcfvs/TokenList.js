@@ -1,3 +1,4 @@
+var TokenList;
 (function () {
     'use strict';
     var keywords, TokenList, parseToken, Space, Comment, Spread, Namespace, Label, Keyword, Number, String, RegExp, Quasis, Symbol;
