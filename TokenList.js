@@ -8,7 +8,7 @@
         line = 1;
         chrKey = 0;
         chr = source[chrKey];
-        while (chr !== undefined) {console.log(chrKey, chr)
+        while (chr !== undefined) {
             nextChr = source[chrKey + 1];
             chrCode = chr.charCodeAt(0);
             if (chr === '\n' || chr === ' ' || chr === '\r' || chr === '\t') {
