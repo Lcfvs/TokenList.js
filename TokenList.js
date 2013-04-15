@@ -1,4 +1,3 @@
-var TokenList;
 (function () {
     'use strict';
     var keywords, TokenList, parseToken, Space, Comment, Spread, Namespace, Label, Keyword, Number, String, RegExp, Quasis, Symbol;
@@ -9,10 +8,10 @@ var TokenList;
         line = 1;
         chrKey = 0;
         chr = source[chrKey];
-        while (chr !== undefined) {
+        while (chr !== undefined) {console.log(chrKey, chr)
             nextChr = source[chrKey + 1];
             chrCode = chr.charCodeAt(0);
-            if (chr === ' ' || chr === '\t' || chr === '\n' || chr === '\r') {
+            if (chr === '\n' || chr === ' ' || chr === '\r' || chr === '\t') {
                 Tokenizer = Space;
             } else if (chr === '/' && (nextChr === '/' || nextChr === '*')) {
                 Tokenizer = Comment;
@@ -114,6 +113,7 @@ var TokenList;
             if (!keywords.hasOwnProperty(keyword)) {
                 keywords[keyword] = true;
             }
+            key += 1;
         }
     };
     Space.pattern = /^(\s+)/;
@@ -125,6 +125,6 @@ var TokenList;
     String.pattern = /^((?:'[^\n]*?[^\\](?:\\\\)*')|(?:"[^\n]*?[^\\](?:\\\\)*"))/;
     RegExp.pattern = /^(\/[^\n\r]*?[^\\](?:\\\\)*\/([gmiy]{0,4})?)/;
     Quasis.pattern = /([\w_$][\w\d_$]*`[^\n]*?[^\\](?:\\\\)*`)/;
-    Symbol.pattern = /^([!=]==?|\|{1,2}|&{1,2}|<{2}|>{2,3}|\+{2}|\-{2}|[+\-%^*\/<>]=?|!+|[~\.{}\[\]:?,=;])/;
+    Symbol.pattern = /^([!=]==?|\|{1,2}|&{1,2}|<{2}|>{2,3}|\+{2}|\-{2}|[+\-%^*\/<>()]=?|!+|[~\.{}\[\]:?,=;])/;
     self.TokenList = TokenList;
 }());
